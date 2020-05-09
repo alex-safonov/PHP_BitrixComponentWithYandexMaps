@@ -7,7 +7,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 if (!empty($arResult['ITEMS'])) {
     Asset::getInstance()->addCss('/css/include/activityNavigator.css', true);
     Asset::getInstance()->addJs('/js/include/activityNavigator.min.js', true);
-    Asset::getInstance()->addJs('https://api-maps.yandex.ru/2.1/?lang=ru_RU', true);
+    Asset::getInstance()->addJs('https://api-maps.yandex.ru/2.1/?lang=ru_RU', true); //подключаем API Яндекс.Карты
     $mapSpKey = "map";
     ?>
     <section class="CCentreList">
@@ -36,7 +36,7 @@ if (!empty($arResult['ITEMS'])) {
         </section>
         <?foreach ($arResult['ITEMS'] as $contactCenter) {
            
-                $idMapList[$mapSpKey . $contactCenter['ID']] = array(
+                $idMapList[$mapSpKey . $contactCenter['ID']] = array(  //Формируем массив свойств для каждого учебного центра
                     "name"    => $contactCenter['NAME'],
                     "coords"  => $contactCenter['MAP']['VALUE'],
                     "address" => $contactCenter['ADDRESS']['VALUE'],
@@ -45,7 +45,8 @@ if (!empty($arResult['ITEMS'])) {
                 $foto_center = CFile::GetPath($contactCenter['DETAIL_PICTURE']);
             ?>
 
-<?if(false):?>
+<!-- Блок для проверки в режиме админа: -->
+<?if(false):?> 
 <?global $USER;
 if ($USER->IsAdmin()):?>
 <pre style="background:#f9ffa4;border:2px solid #f00;padding:5px;">
@@ -53,6 +54,7 @@ if ($USER->IsAdmin()):?>
 </pre>
 <?endif;?>
 <?endif;?>
+<!-- Конец Блок для проверки -->
 
             <section class="blockContent">
                 <div class="centerBlock" itemscope itemtype="http://schema.org/Organization">
@@ -80,38 +82,24 @@ if ($USER->IsAdmin()):?>
                         <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 
 
-<!--                             <?//if($contactCenter['CODE'] == "tsentralnyy_ofis"): ?> Главный офис: <span itemprop="streetAddress"><?= $contactCenter['ADDRESS']['VALUE'] ?></span></span><?= $tel ?><?= $email ?>
-
-<?//else:?> -->
-
-
-<!--                             Адрес<?//if($contactCenter['PARTNER']['VALUE'] == "Да"):?> партнера<?//endif;?>: <span itemprop="streetAddress"><?= $contactCenter['ADDRESS']['VALUE'] ?></span></span><?= $tel ?><?= $email ?> -->
-
-
                             <b></br>Адрес: </b> <span itemprop="streetAddress"><?= $contactCenter['ADDRESS']['VALUE'] ?></span></span></br>
                             <b>Телефон: </b><?= $tel ?></br>
                             <b>E-mail: </b><?= $email ?></br>
                             <b>Время работы: </b><?= $contactCenter['SCHEDULE_DETAILS']['VALUE'] ?></br>
                             
 
-
-<!--                             <?//endif;?> -->
-
-<!--
-							Адрес<?//if($contactCenter['PARTNER']['VALUE'] == "Да"):?> партнера<?//endif;?>: <span itemprop="addressLocality">г. <?= $contactCenter['CITY']['VALUE'] ?></span>, <span itemprop="streetAddress"><?= $contactCenter['ADDRESS']['VALUE'] ?></span></span><?= $tel ?><?= $email ?>
--->
 					</div>
 
-
-
-
                             <div class="wrapper" style=" display: flex;"; >
-                                <div class="col one" style=" flex-basis:49%;  margin: 20px 0;"   ">
-   
-                                   <img src="<?=$foto_center?>" width="461"; height="400"; padding-right="10px";>
 
+                            <!-- Выводим фотографию учебного центра: -->
+                                <div class="col one" style=" flex-basis:49%;  margin: 20px 0;"   ">
+                                      <img src="<?=$foto_center?>" width="461"; height="400"; padding-right="10px";> 
                                 </div>
+
                                 <div class="col two" style=" flex-basis:2%; "></div>
+
+                            <!-- Выводим Яндекс Карту с расположением учебного центра: -->
                                 <div class="col three" style=" flex-basis: 49%; ">
                                     <div id="<?= $mapSpKey . $contactCenter['ID'] ?>" class="map"></div>
                                 </div>
@@ -127,6 +115,8 @@ if ($USER->IsAdmin()):?>
         <?
         } ?>
     </section>
+
+<!-- Скрипт для подключения Яндекс.Карты: -->
     <script type="text/javascript">
         var myMaps;
         ymaps.ready(function () {

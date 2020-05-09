@@ -8,8 +8,8 @@ if (!\Bitrix\Main\Loader::includeModule("iblock")) {
 $arResult = array();
 $arSelect = Array( "*" );
 $arFilter = Array(
-    "IBLOCK_CODE"                        => "training_centers",
-    "ACTIVE"                             => "Y",
+    "IBLOCK_CODE"                        => "training_centers", //подключаем инфоблок с учебными центрами
+    "ACTIVE"                             => "Y", //выбираем активные учебные центры
     "PROPERTY_INSERT_INTO_CONTACTS_PAGE" => 1
 );
 
@@ -20,7 +20,7 @@ $tcOb = CIBlockElement::GetList(
     $arSelect
 );
 
-while ($tcData = $tcOb->GetNextElement()) {
+while ($tcData = $tcOb->GetNextElement()) { //перебираем масси с учебными центрами
     $arFields = $tcData->GetFields();
     $arProperty = $tcData->GetProperties();
     $arResult['TABS'][$arFields['ID']] = $arProperty['CITY']['VALUE'];
